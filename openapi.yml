@@ -15,6 +15,7 @@ components:
           type: number
         longitude:
           type: number
+          example: 32.590
         description:
           type: string
         photo:
@@ -32,7 +33,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: Location
+                  $ref: '#/components/schemas/Location'
   /addlocation:
     post:
       summary: Adds a location to the server
@@ -41,7 +42,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: Location
+              $ref: '#/components/schemas/Location'
       responses:
         '201':
           description: Added successfully
@@ -63,7 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: Location
+                $ref: '#/components/schemas/Location'
         404:
           description: Location not found
 
