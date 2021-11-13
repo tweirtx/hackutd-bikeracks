@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: BikeRacks
+  version: 1.0.0
+servers:
+- url: http://web.tweirtx.me/bikeracks/v1
+paths:
+  /addlocation:
+    post:
+      operationId: addlocation_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      responses:
+        "201":
+          description: Added successfully
+        "400":
+          description: Bad request
+      summary: Adds a location to the server
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /location/{location_id}:
+    get:
+      operationId: location_location_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: location_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: Respond with the location requested
+        "404":
+          description: Location not found
+      summary: Gets a specific location by ID
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /locations:
+    get:
+      operationId: locations_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Location'
+                type: array
+          description: A JSON array of locations
+      summary: Returns a list of locations.
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  schemas:
+    Location:
+      example:
+        latitude: 6.027456183070403
+        description: description
+        photo: photo
+        id: 0
+        longitude: 32.59
+      properties:
+        id:
+          type: integer
+        latitude:
+          type: number
+        longitude:
+          example: 32.59
+          type: number
+        description:
+          type: string
+        photo:
+          type: string
+      type: object
