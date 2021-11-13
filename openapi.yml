@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: BikeRacks
+  version: 1.0.0
+servers:
+  - url: http://web.tweirtx.me/bikeracks/v1
+components:
+  schemas:
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+        latitude:
+          type: number
+        longitude:
+          type: number
+        description:
+          type: string
+        photo:
+          type: string
+
+paths:
+  /locations:
+    get:
+      summary: Returns a list of locations.
+      responses:
+        '200':    # status code
+          description: A JSON array of locations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: Location
+  /addlocation:
+    post:
+      summary: Adds a location to the server
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: Location
+      responses:
+        '201':
+          description: Added successfully
+        400:
+          description: Bad request
+
+  /location/{location_id}:
+    get:
+      summary: Gets a specific location by ID
+      parameters:
+        - in: path
+          name: location_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Respond with the location requested
+          content:
+            application/json:
+              schema:
+                $ref: Location
+        404:
+          description: Location not found
+
+
