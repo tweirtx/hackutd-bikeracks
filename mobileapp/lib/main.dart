@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -175,11 +177,27 @@ class _LocationAddState extends State<_LocationAddPage> {
 
   XFile? photo;
   final ImagePicker _picker = ImagePicker();
+  String description = "";
   Future capturePhoto() async{
     photo = await _picker.pickImage(source: ImageSource.camera);
   }
   Future submit() async {
-
+    if (description.isEmpty) {
+      return showDialog(context: context, builder: build); // TODO make this actually say something
+    }
+    if (photo == null) {
+      return showDialog(context: context, builder: build); // TODO make this actually say something
+    }
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    final photoBytes = File(photo!.path).readAsBytesSync();
+    String photo64 = "data:image/png;base64,"+base64Encode(photoBytes);
+    Location location = Location(latitude: position.latitude, longitude: position.longitude, photo: photo64, description: description);
+    DefaultApi api = DefaultApi();
+    await api.addlocationPost(location);
+    return showDialog(context: context, builder: build); // TODO make this actually say something
+  }
+  void _updateDesc(String desc) {
+    description = desc;
   }
 
   @override
@@ -206,7 +224,9 @@ class _LocationAddState extends State<_LocationAddPage> {
             const Text(
               'Your current location will be sent as the bike rack location.',
             ),
-            TextField(),
+            TextField(
+              onSubmitted: _updateDesc,
+            ),
             IconButton(onPressed: capturePhoto, icon: const Icon(Icons.camera)),
             IconButton(onPressed: submit, icon: const Icon(Icons.send))
           ],

@@ -12,7 +12,7 @@ part of openapi.api;
 class Location {
   /// Returns a new [Location] instance.
   Location({
-    this.id,
+    this.id=null,
     this.latitude,
     this.longitude,
     this.description,
