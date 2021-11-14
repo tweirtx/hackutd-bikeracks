@@ -50,7 +50,7 @@ def location_location_id_get(location_id):  # noqa: E501
     """
     results = loop.run_until_complete(query_for(location_id))
     if len(results) > 0:
-        return results
+        return results[0]
     else:
         return flask.abort(404)
 

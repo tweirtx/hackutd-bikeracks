@@ -50,7 +50,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  var client = ApiClient();
+  var client = DefaultApi();
+  late List<Location> _locations;
+
+  Future _getLocations() async {
+    _locations = await client.locationsGet();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -71,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    _getLocations().then((value) => null);
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -101,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$client.locationsGet()',
+              '$_locations',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
