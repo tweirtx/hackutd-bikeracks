@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:openapi/api.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -53,7 +55,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var client = DefaultApi();
-  late List<Location> _locations;
+  List<Location> _locations = List.empty(growable: true);
   List<String> _descriptions = List.empty(growable: true);
 
   Future _getLocations() async {
@@ -74,14 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     _getLocations().then((value) => null);
-    _getLocations().then((value) => null);
+    sleep(const Duration(seconds: 5));
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -90,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: FlutterMap(
         options: MapOptions(
-          center: LatLng(51.5, -0.09),
+          center: LatLng(0, 0),
           zoom: 13.0,
         ),
         layers: [
@@ -99,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Marker(
                 width: 80.0,
                 height: 80.0,
-                point: LatLng(51.5, -0.09),
+                point: LatLng(0, 0),
                 builder: (ctx) =>
                     Container(
                       child: FlutterLogo(),
@@ -113,13 +110,17 @@ class _MyHomePageState extends State<MyHomePage> {
               urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
               subdomains: ['a', 'b', 'c']
           )),
-          LocationMarkerLayerWidget(),
+          LocationMarkerLayerWidget(
+            plugin: const LocationMarkerPlugin(
+              centerOnLocationUpdate: CenterOnLocationUpdate.first,
+            ),
+          ),
           MarkerLayerWidget(options: MarkerLayerOptions(
             markers: [
               Marker(
                 width: 80.0,
                 height: 80.0,
-                point: LatLng(51.5, -0.09),
+                point: LatLng(0, 0),
                 builder: (ctx) =>
                     Container(
                       child: FlutterLogo(),
