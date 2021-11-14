@@ -183,18 +183,57 @@ class _LocationAddState extends State<_LocationAddPage> {
   }
   Future submit() async {
     if (description.isEmpty) {
-      return showDialog(context: context, builder: build); // TODO make this actually say something
+      return showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Field Empty!"),
+          content: const Text("Please provide a description!"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      });
     }
     if (photo == null) {
-      return showDialog(context: context, builder: build); // TODO make this actually say something
+      return showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("No photo!"),
+          content: const Text("Please provide a photo!"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      });
     }
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     final photoBytes = File(photo!.path).readAsBytesSync();
-    String photo64 = "data:image/png;base64,"+base64Encode(photoBytes);
+    String photo64 = base64Encode(photoBytes);
     Location location = Location(latitude: position.latitude, longitude: position.longitude, photo: photo64, description: description);
     DefaultApi api = DefaultApi();
     await api.addlocationPost(location);
-    return showDialog(context: context, builder: build); // TODO make this actually say something
+    return showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Submitted!"),
+        content: const Text("Your entry was submitted to the admin team for approval."),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    });
   }
   void _updateDesc(String desc) {
     description = desc;
