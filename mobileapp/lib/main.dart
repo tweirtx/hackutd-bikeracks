@@ -57,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
   var client = DefaultApi();
   List<Location> _locations = List.empty(growable: true);
   List<String> _descriptions = List.empty(growable: true);
+  List<Marker> markers = List.empty(growable: true);
+
 
   Future _getLocations() async {
     _locations = await client.locationsGet();
@@ -74,9 +76,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _genMarkers() {
+    for (Location location in _locations) {
+      markers.add(Marker(
+        width: 20.0,
+        height: 20.0,
+        point: LatLng(location.latitude as double, location.longitude as double),
+        builder: (ctx) =>
+            Container(
+              child: const Icon(
+                Icons.location_on
+              ),
+            ),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    _getLocations().then((value) => null);
+    _getLocations().then((value) => _genMarkers());
     sleep(const Duration(seconds: 5));
 
     return Scaffold(
@@ -92,17 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         layers: [
           MarkerLayerOptions(
-            markers: [
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: LatLng(0, 0),
-                builder: (ctx) =>
-                    Container(
-                      child: FlutterLogo(),
-                    ),
-              ),
-            ],
+            markers: markers
           ),
         ],
         children: <Widget>[
@@ -115,19 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
               centerOnLocationUpdate: CenterOnLocationUpdate.first,
             ),
           ),
-          MarkerLayerWidget(options: MarkerLayerOptions(
-            markers: [
-              Marker(
-                width: 80.0,
-                height: 80.0,
-                point: LatLng(0, 0),
-                builder: (ctx) =>
-                    Container(
-                      child: FlutterLogo(),
-                    ),
-              ),
-            ],
-          )),
         ],
       ),
       floatingActionButton: FloatingActionButton(
