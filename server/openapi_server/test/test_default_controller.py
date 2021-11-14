@@ -6,8 +6,8 @@ import unittest
 from flask import json
 from six import BytesIO
 
-from openapi_server.models.location import Location  # noqa: E501
-from openapi_server.test import BaseTestCase
+from ..models.location import Location  # noqa: E501
+from . import BaseTestCase
 
 
 class TestDefaultController(BaseTestCase):

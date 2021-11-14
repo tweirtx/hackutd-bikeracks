@@ -17,7 +17,8 @@ async def initdb():
         file_contents = schema.read()
         schema_lines = file_contents.split(';')
         for line in schema_lines:
-            if len(line) == 0:
+            if len(line) != 1:
+                print(len(line))
                 await db_connection.execute(line)
 
 

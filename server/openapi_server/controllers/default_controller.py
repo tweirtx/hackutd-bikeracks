@@ -22,7 +22,7 @@ async def query_for(dbentry_id=None):
     return output
 
 
-def addlocation_post(location):  # noqa: E501
+def addlocation_post():  # noqa: E501
     """Adds a location to the server
 
      # noqa: E501
@@ -34,8 +34,13 @@ def addlocation_post(location):  # noqa: E501
     """
     if connexion.request.is_json:
         location = Location.from_dict(connexion.request.get_json())  # noqa: E501
-        db_connection.execute()
-    return 'do some magic!'
+        loop.run_until_complete(
+            db_connection.execute("INSERT INTO bikeracks.public.pending VALUES (DEFAULT, $1, $2, $3, $4);",
+                                  location.latitude,
+                                  location.longitude,
+                                  location.description,
+                                  location.photo))
+    return flask.Response(status=201)
 
 
 def location_location_id_get(location_id):  # noqa: E501
