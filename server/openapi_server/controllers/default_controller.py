@@ -19,7 +19,7 @@ async def query_for(dbentry_id=None):
         for item in result.items():
             resultout[item[0]] = item[1]
         output.append(resultout)
-    return json.encoder.JSONEncoder().encode(o=output)
+    return output
 
 
 def addlocation_post(location):  # noqa: E501
