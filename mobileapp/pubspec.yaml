@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   openapi:
     path: ../apilib-dart
+  flutter_map: any # or the latest version on Pub
+  flutter_map_location_marker: any
 
 dev_dependencies:
   flutter_test:
