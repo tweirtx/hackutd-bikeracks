@@ -38,6 +38,7 @@ dependencies:
     path: ../apilib-dart
   flutter_map: any # or the latest version on Pub
   flutter_map_location_marker: any
+  image_picker: ^0.8.4+4
 
 dev_dependencies:
   flutter_test:

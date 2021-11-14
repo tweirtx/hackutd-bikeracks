@@ -5,6 +5,7 @@ import 'package:openapi/api.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -136,24 +137,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class _LocationAddScreen extends StatelessWidget {
   // This widget is the root of your application.
+  Future<bool> _onBackPressed() async {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Add Location',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-          primarySwatch: Colors.blue,
-          brightness: Brightness.dark
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        body: Center(
+          child: _LocationAddPage(title: 'Add Location'),
+        ),
       ),
-      home: _LocationAddPage(title: 'Add Location'),
     );
   }
 }
@@ -177,6 +173,15 @@ class _LocationAddPage extends StatefulWidget {
 
 class _LocationAddState extends State<_LocationAddPage> {
 
+  XFile? photo;
+  final ImagePicker _picker = ImagePicker();
+  Future capturePhoto() async{
+    photo = await _picker.pickImage(source: ImageSource.camera);
+  }
+  Future submit() async {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -190,30 +195,20 @@ class _LocationAddState extends State<_LocationAddPage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'TODO implement this page',
+            const Text(
+              'Your current location will be sent as the bike rack location.',
             ),
+            TextField(),
+            IconButton(onPressed: capturePhoto, icon: const Icon(Icons.camera)),
+            IconButton(onPressed: submit, icon: const Icon(Icons.send))
           ],
         ),
       ),
